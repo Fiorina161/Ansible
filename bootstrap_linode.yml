@@ -1,0 +1,35 @@
+---
+
+# Creates initial user on new Linode machine
+# ansible-playbook -K user@machine bootstrap_linode.yml
+
+- hosts: linode
+  become: true
+
+  tasks:
+  - name: Install updates
+    apt:
+      upgrade: dist
+      update_cache: yes
+
+  - name: Create user
+    user:
+      name: alain
+      state: present
+      shell: /bin/bash
+      system: no
+      createhome: yes
+      home: /home/alain
+
+  - name: Add ssh key
+    authorized_key:
+      user: alain
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGeyTynhxAe9nsl4MaGjKqfFkGKU63762V3NCsbhvpAz alain.default"
+
+  - name: Add to sudoers
+    copy:
+      src: sudoer_alain
+      dest: /etc/sudoers.d/alain
+      owner: root
+      group: root
+      mode: 0440
