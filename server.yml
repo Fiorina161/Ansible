@@ -1,0 +1,42 @@
+---
+
+###############################################################################
+#
+#  UPDATE
+#
+###############################################################################
+- hosts: all
+  become: true
+
+  tasks:
+  - name: install updates
+    apt:
+      upgrade: dist
+      update_cache: yes
+
+###############################################################################
+#
+#  CREATE MY USER
+#
+###############################################################################
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create user alain
+    user:
+      name: alain
+      groups: alain
+
+  - name: add ssh key
+    authorized_key:
+      user: alain
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGeyTynhxAe9nsl4MaGjKqfFkGKU63762V3NCsbhvpAz alain.default"
+
+  - name: add sudoers file
+    copy:
+      src: sudoer_alain
+      dest: /etc/sudoers.d/alain
+      owner: root
+      group: root
+      mode: 0440
