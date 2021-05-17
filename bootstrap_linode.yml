@@ -6,17 +6,37 @@
 - hosts: linode
   become: true
 
+
+  tasks:
+
+
+#####################################################################
+#
+#    SETTING UP HOSTNAME
+#
+#####################################################################
+
+
+  - name: Set hostname
+    hostname:
+      name: "{{ hostname }}"
+
+#####################################################################
+#
+#    UPDATE PACKAGE CACHE
+#
+#####################################################################
+
+  - name: Install updates
+    apt:
+      upgrade: dist
+      update_cache: yes
+
 #####################################################################
 #
 #    CREATE USER
 #
 #####################################################################
-
-  tasks:
-  - name: Install updates
-    apt:
-      upgrade: dist
-      update_cache: yes
 
   - name: Create user
     user:
